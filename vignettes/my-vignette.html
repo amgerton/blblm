@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>my-vignette</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">my-vignette</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(blblm)</a></code></pre></div>
+<div id="description" class="section level2">
+<h2>Description</h2>
+<p>The Bag of Little Bootstraps algorithm allows the user to utilize bootstrapping to create regression models. This bootstraping can be useful for very large datasets. In addition to bootstrapping, another useful tool is parallel programming with more than one CPUs. This parallelization can make the performance and computation time more accurate and faster to fit and predict regression models.</p>
+
+</div>
+<div id="the-blblm-package" class="section level1">
+<h1>THE BLBLM PACKAGE</h1>
+<p>This package has two main functions, <code>blblm()</code> and <code>blbglm()</code>. Each function has a set of methods. The <code>blblm()</code> function utilizes bootstrapping to fit a linear regression model. The <code>blbglm()</code> function utilizes bootstrapping to fit a logistic regression model. Both these functions come with the option to use parallel programming or not.</p>
+<div id="blblm-function" class="section level2">
+<h2>blblm function</h2>
+
+</div>
+<div id="functions-and-methods" class="section level2">
+<h2>Functions and Methods</h2>
+<ol style="list-style-type: decimal">
+<li><p><code>blblm(formula, data, m = 10, B = 5000, parallel = FALSE)</code> : this function utilizes linear regression with little bag of bootstraps with the option to Use parallel programming.If specify the argument <code>parallel = TRUE</code>, then this function will use parallelization. Otherwise, the function will use the default argument <code>parallel = FALSE</code> and not use parallelization. If the user would like to use parallel programming, then the user must define the number of desired CPUs. As noted in the description, the user must run <code>plan(multisession, worker = cl)</code>, where cl is the number of CPUs, in the console before using the parallelization feature in this function. This function is from the <code>furrr</code> package so the user must also have <code>furrr</code> package imported and run <code>library(furrr)</code> in there console as well. The argument <code>m</code> is the number of subsamples the user wants to split the data into and the argument <code>B</code> is the number of bootstrap samples.</p>
+<ul>
+<li><p><code>split_data(data, m)</code> : these method will split the data of the user’s choose into as many subsets as the m integer specifies.</p></li>
+<li><p><code>print(x, ...)</code> : this method will print out the fitted model in the form <span class="math inline">\(y ~ x_{1} + x_{2}\)</span></p></li>
+<li><p><code>coef(object, ...)</code>: calculates the coefficients for the linear regression model you have fitted. It returns a numeric vector containing the coefficients of the parameters for the model the user has fitted. If the user wishes to fit a model <span class="math inline">\(y\)</span> ~ <span class="math inline">\(B_{1}*x_{1} + B_{2}*x_{2}\)</span>, then this function with return the coefficients <span class="math inline">\(B_{1}\)</span> and <span class="math inline">\(B_{2}\)</span>.</p></li>
+<li><p><code>confint(object, parm = NULL, level = .95, ...)</code> : gets the confidence interval for a single or more than one variable. By default, this method will return a 95% confidence interval, or confidence intervals depending on how many variables the user chooses. If the user does not wish to a 95% confidence interval, the user can change the level argument to what confidence level they wish. The user can also request specific parameters by equaling the <code>parm</code> argument to the parameters they wish to use.</p></li>
+<li><p><code>sigma(object, confidence = FALSE, level = 0.95, ...)</code> : returns the standard deviation of the errors, estimate of <span class="math inline">\(\sigma\)</span>. The default argument is <code>confidence = FALSE</code>, but if user specifies <code>confidence = TRUE</code>, then the confidence interval of <span class="math inline">\(\sigma\)</span> is included in the output. The default argument <code>level = 0.95</code> will always make a confidence level of 95% unless specified differently by the user.</p></li>
+<li><p><code>predict(object, new_data, confidence = FALSE, level = .95, ...)</code> : this method utilizes the fitted linear regression model to get the predictions for the new data. If the user wishes to use <code>confidence = TRUE</code>, this method will also return a 3 column matrix in which the first column is the predictions, the second column is the the lower endpoints of the confidence interval, and the third column will return the upper endpoints of the confidence interval. By default, the confidence level will be 95% but the user can change this by using the <code>level</code> argument.</p></li>
+</ul></li>
+<li><p><code>blbglm(formula, data, m = 10, B = 5000, parallel = FALSE)</code>: this second main function utilizes a bag of little bootstrap algorithm to fit a logistic regression model to the data and formula of the user’s choice. This main function also gives the option of parallel programming. The default argument, <code>parallel = FALSE</code>, will not use parallelization but the user can change this by using <code>parallel = TRUE</code> to utilize parallelization. If the user does wish to use the parallelization feature, make sure to run the following code in the console : <code>plan(multisession, worker = cl)</code> were cl is the number of CPUs the user wishes to use. This function is from the <code>furrr</code> package so the user must also have <code>furrr</code> package imported and run <code>library(furrr)</code> in there console as well. The arguments <code>B</code> and <code>m</code> are the number of bootstrap samples and the number of subgroups in which to split the data, respectively. The user can modify these two arguments to any numeric value they desire.</p>
+<ul>
+<li>NOTE: The methods for this function, <code>blbglm()</code> are the same as above. The only difference is we are fitting and predicted for classification. Instead of using linear regression, this main function and all the methods for this function will use logistic regression.</li>
+</ul></li>
+</ol>
+<p></p>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<div id="mtcars-dataset" class="section level3">
+<h3>MTCARS DATASET</h3>
+<p>The mtcars data is a built dataset for R that is very popular for linear regression models. We will use this dataset for our two examples on our <code>blblm()</code> function using and not using parallel programming. We will be using two features, <code>wt</code> and <code>hp</code>, to predict our Y, <code>mpg</code>.</p>
+<div id="an-blblm-example-not-using-parallelization" class="section level4">
+<h4>An <code>blblm()</code> Example Not Using Parallelization</h4>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># blblm() computes linear regression with bag of little bootstraps</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">model1 &lt;-<span class="st"> </span><span class="kw">blblm</span>(mpg <span class="op">~</span><span class="st"> </span>wt <span class="op">*</span><span class="st"> </span>hp, <span class="dt">data =</span> mtcars, <span class="dt">m =</span> <span class="dv">3</span>, <span class="dt">B =</span> <span class="dv">100</span>, <span class="dt">parallel =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="kw">print</span>(model1)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; blblm model: mpg ~ wt * hp</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">coef</span>(model1)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt; (Intercept)          wt          hp       wt:hp </span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; 48.53701440 -7.99093612 -0.11497696  0.02644989</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">confint</span>(model1, <span class="st">&quot;wt&quot;</span>)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="co">#&gt;         2.5%     97.5%</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt; wt -10.65403 -4.770295</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw">confint</span>(model1, <span class="kw">c</span>(<span class="st">&quot;wt&quot;</span>, <span class="st">&quot;hp&quot;</span>))</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt;           2.5%       97.5%</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; wt -10.6540257 -4.77029544</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; hp  -0.1802101 -0.03794003</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">sigma</span>(model1, <span class="dt">confidence =</span> <span class="ot">TRUE</span>, <span class="dt">level =</span> <span class="fl">.95</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="co">#&gt;    sigma      lwr      upr </span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">#&gt; 1.817970 1.247539 2.190295</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw">sigma</span>(model1, <span class="dt">confidence =</span> <span class="ot">FALSE</span>, <span class="dt">level =</span> <span class="fl">.95</span>)</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; [1] 1.81797</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">predict</span>(model1, <span class="kw">data.frame</span>(<span class="dt">wt =</span> <span class="kw">c</span>(<span class="fl">2.5</span>, <span class="dv">3</span>), <span class="dt">hp =</span> <span class="kw">c</span>(<span class="dv">150</span>, <span class="dv">170</span>)), <span class="dt">confidence =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">#&gt;        fit      lwr      upr</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&gt; 1 21.23184 20.03397 22.44225</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co">#&gt; 2 18.50757 17.47396 19.54254</span></a></code></pre></div>
+</div>
+<div id="an-blblm-example-using-parallelization" class="section level4">
+<h4>An <code>blblm()</code> Example Using Parallelization</h4>
+<p>Before using our parallel programming feature, we must call the furrr package, specify the number of CPUs, and run <code>plan(multisession, worker = cl)</code> like in the code below.. In the code below, I used 4 CPUs.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">library</span>(furrr)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">cl =<span class="st"> </span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">plan</span>(multisession, <span class="dt">worker =</span> cl)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">model2 &lt;-<span class="st"> </span><span class="kw">blblm</span>(mpg <span class="op">~</span><span class="st"> </span>wt <span class="op">*</span><span class="st"> </span>hp, <span class="dt">data =</span> mtcars, <span class="dt">m =</span> <span class="dv">3</span>, <span class="dt">B =</span> <span class="dv">100</span>, <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw">print</span>(model2)</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="co">#&gt; blblm model: mpg ~ wt * hp</span></a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">confint</span>(model2, <span class="kw">c</span>(<span class="st">&quot;wt&quot;</span>, <span class="st">&quot;hp&quot;</span>))</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="co">#&gt;          2.5%       97.5%</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="co">#&gt; wt -9.5531054 -3.85893023</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">#&gt; hp -0.1293047 -0.03936394</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">sigma</span>(model2, <span class="dt">confidence =</span> <span class="ot">TRUE</span>, <span class="dt">level =</span> <span class="fl">.90</span>)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co">#&gt;    sigma      lwr      upr </span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co">#&gt; 1.733267 1.329792 2.106523</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="kw">sigma</span>(model2, <span class="dt">confidence =</span> <span class="ot">FALSE</span>, <span class="dt">level =</span> <span class="fl">.90</span>)</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#&gt; [1] 1.733267</span></a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">predict</span>(model2, <span class="kw">data.frame</span>(<span class="dt">wt =</span> <span class="kw">c</span>(<span class="fl">2.5</span>, <span class="dv">3</span>), <span class="dt">hp =</span> <span class="kw">c</span>(<span class="dv">150</span>, <span class="dv">170</span>)), <span class="dt">confidence =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">#&gt;        1        2 </span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="co">#&gt; 21.62957 19.11260</span></a></code></pre></div>
+</div>
+</div>
+<div id="iris-dataset" class="section level3">
+<h3>IRIS DATASET</h3>
+<p>The iris data is a built dataset for R that is very popular for classification models. We will use this dataset for our two examples on our <code>blbglm()</code> function using and not using parallel programming. We will be using two features, <code>Sepal.Length</code> and <code>Sepal.Width</code>, to predict our Y, <code>Species</code>.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;iris&quot;</span>)</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw">head</span>(iris)</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="co">#&gt;   Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="co">#&gt; 1          5.1         3.5          1.4         0.2  setosa</span></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="co">#&gt; 2          4.9         3.0          1.4         0.2  setosa</span></a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="co">#&gt; 3          4.7         3.2          1.3         0.2  setosa</span></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="co">#&gt; 4          4.6         3.1          1.5         0.2  setosa</span></a>
+<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="co">#&gt; 5          5.0         3.6          1.4         0.2  setosa</span></a>
+<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="co">#&gt; 6          5.4         3.9          1.7         0.4  setosa</span></a>
+<a class="sourceLine" id="cb12-10" data-line-number="10">training =<span class="st"> </span>iris[<span class="dv">1</span><span class="op">:</span><span class="dv">100</span>,]</a>
+<a class="sourceLine" id="cb12-11" data-line-number="11">testing =<span class="st"> </span>iris[<span class="dv">100</span><span class="op">:</span><span class="dv">150</span>,]</a></code></pre></div>
+<div id="a-blbglm-example-without-parallelization" class="section level4">
+<h4>A <code>blbglm()</code> Example without Parallelization</h4>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">fit_log1 &lt;-<span class="st"> </span><span class="kw">blbglm</span>(Species <span class="op">~</span><span class="st"> </span>Sepal.Length <span class="op">+</span><span class="st"> </span>Sepal.Width, <span class="dt">data =</span> training, <span class="dt">B =</span> <span class="dv">100</span>, <span class="dt">parallel =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">fit_log1</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="co">#&gt; blbglm model: Species ~ Sepal.Length + Sepal.Width</span></a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">coef</span>(fit_log1)</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="co">#&gt;  (Intercept) Sepal.Length  Sepal.Width </span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="co">#&gt;   -109.03385     57.59441    -65.29630</span></a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">confint</span>(fit_log1, <span class="kw">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Sepal.Width&quot;</span>))</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">#&gt;                   2.5%     97.5%</span></a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="co">#&gt; Sepal.Length  56.45815  58.85328</span></a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="co">#&gt; Sepal.Width  -66.77333 -63.46054</span></a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">predict</span>(fit_log1, <span class="kw">data.frame</span>(<span class="dt">Sepal.Length =</span> <span class="kw">c</span>(<span class="fl">5.1</span>, <span class="fl">3.0</span>), <span class="dt">Sepal.Width =</span> <span class="kw">c</span>(<span class="fl">3.5</span>, <span class="fl">4.0</span>)), <span class="dt">confidence =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="co">#&gt;            fit         lwr          upr</span></a>
+<a class="sourceLine" id="cb16-3" data-line-number="3"><span class="co">#&gt; 1 8.441694e-11 4.47752e-11 1.302913e-10</span></a>
+<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="co">#&gt; 2 4.014370e-49 5.49968e-51 4.477930e-48</span></a></code></pre></div>
+</div>
+<div id="a-blbglm-example-with-parallelization" class="section level4">
+<h4>A <code>blbglm()</code> Example with Parallelization</h4>
+<p>Again before using our parallel programming feature, we must call the furrr package, specify the number of CPUs, and run <code>plan(multisession, worker = cl)</code> like in the code below.. In the code below, I used 4 CPUs.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">library</span>(furrr)</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">cl =<span class="st"> </span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="kw">plan</span>(multisession, <span class="dt">worker =</span> cl)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">fit_log &lt;-<span class="st"> </span><span class="kw">blbglm</span>(Species <span class="op">~</span><span class="st"> </span>Sepal.Length <span class="op">+</span><span class="st"> </span>Sepal.Width, <span class="dt">data =</span> training, <span class="dt">B =</span> <span class="dv">100</span>, <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">fit_log</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="co">#&gt; blbglm model: Species ~ Sepal.Length + Sepal.Width</span></a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">coef</span>(fit_log)</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="co">#&gt;  (Intercept) Sepal.Length  Sepal.Width </span></a>
+<a class="sourceLine" id="cb19-3" data-line-number="3"><span class="co">#&gt;    -33.51097     44.10497    -66.17438</span></a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">confint</span>(fit_log, <span class="kw">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Sepal.Width&quot;</span>))</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="co">#&gt;                   2.5%     97.5%</span></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3"><span class="co">#&gt; Sepal.Length  42.85617  45.28654</span></a>
+<a class="sourceLine" id="cb20-4" data-line-number="4"><span class="co">#&gt; Sepal.Width  -67.80616 -64.35846</span></a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">predict</span>(fit_log, <span class="kw">data.frame</span>(<span class="dt">Sepal.Length =</span> <span class="kw">c</span>(<span class="fl">5.1</span>, <span class="fl">3.0</span>), <span class="dt">Sepal.Width =</span> <span class="kw">c</span>(<span class="fl">3.5</span>, <span class="fl">4.0</span>)))</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="co">#&gt;            1            2 </span></a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="co">#&gt; 1.941627e-12 6.296775e-13</span></a></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
