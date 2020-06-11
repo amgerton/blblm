@@ -1,18 +1,21 @@
 Package: blblm
 Type: Package
-Title: What the Package Does (Title Case)
+Title: A Bag of Little Bootstrap Package
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Alanna Gerton
+Maintainer: The package maintainer <amgerton@ucdavis.edu>
+Description: Use the bag of little bootstraps algorithm to compute the linear regression and logistic regression model.The user is also given the use parallel programming for each of these main functions. If the user wishes to use parallelization, then the user must specifiy `parallel = TRUE` in the arguments, otherwise it will use the default `parallel = FALSE`. The user must specify number of CPUs before using parallel programming. Please run `plan(multisession, worker = cl)` where cl is the number of CPUs before using the function with parallelization. 
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests: 
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown
 Imports: 
     purrr,
-    magrittr
+    magrittr,
+    furrr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
+VignetteBuilder: knitr

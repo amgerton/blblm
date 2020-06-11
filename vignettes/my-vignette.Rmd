@@ -1,0 +1,175 @@
+---
+title: "my-vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{my-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, warning = FALSE, message = FALSE}
+library(blblm)
+```
+
+Description
+---
+The Bag of Little Bootstraps algorithm allows the user to utilize bootstrapping to create regression models. This bootstraping can be useful for very large datasets. In addition to bootstrapping, another useful tool is parallel programming with more than one CPUs. This parallelization can make the performance and computation time more accurate and faster to fit and predict regression models. 
+
+\newline
+
+# THE BLBLM PACKAGE
+
+This package has two main functions, `blblm()` and `blbglm()`. Each function has a set of methods. The `blblm()` function utilizes bootstrapping to fit a linear regression model. The `blbglm()` function utilizes bootstrapping to fit a logistic regression model. Both these functions come with the option to use parallel programming or not. 
+
+## blblm function 
+
+\newline
+
+Functions and Methods
+---
+
+1. `blblm(formula, data, m = 10, B = 5000, parallel = FALSE)` : this function utilizes linear regression with little bag of bootstraps with the option to Use parallel programming.If specify the argument `parallel = TRUE`, then this function will use  parallelization. Otherwise, the function will use the default argument `parallel = FALSE` and not use parallelization. If the user would like to use parallel programming, then the user must define the number of desired CPUs. As noted in the description, the user must run `plan(multisession, worker = cl)`, where cl is the number of CPUs, in the console before using the parallelization feature in this function. This function is from the `furrr` package so the user must also have `furrr` package imported and run `library(furrr)` in there console as well. The argument `m` is the number of subsamples the user wants to split the data into and the argument `B` is the number of bootstrap samples. 
+
+    * `split_data(data, m)` : these method will split the data of the user's choose into as many subsets as the m integer specifies.
+    
+    * `print(x, ...)` : this method will print out the fitted model in the form $y ~ x_{1} + x_{2}$
+    
+    * `coef(object, ...)`: calculates the coefficients for the linear regression model you have fitted. It returns a numeric vector containing the coefficients of the parameters for the model the user has fitted. If the user wishes to fit a model $y$ ~ $B_{1}*x_{1} + B_{2}*x_{2}$, then this function with return the coefficients $B_{1}$ and $B_{2}$. 
+    
+    * `confint(object, parm = NULL, level = .95, ...)` : gets the confidence interval for a single or more than one variable. By default, this method will return a 95% confidence interval, or confidence intervals depending on how many variables the user chooses. If the user does not wish to a 95% confidence interval, the user can change the level argument to what confidence level they wish. The user can also request specific parameters by equaling the `parm` argument to the parameters they wish to use. 
+    
+    * `sigma(object, confidence = FALSE, level = 0.95, ...)` : returns the standard deviation of the errors, estimate of $\sigma$. The default argument is `confidence = FALSE`, but if user specifies `confidence = TRUE`, then the confidence interval of $\sigma$ is included in the output. The default argument `level = 0.95` will always make a confidence level of 95% unless specified differently by the user.  
+    
+    * `predict(object, new_data, confidence = FALSE, level = .95, ...)` : this method utilizes the fitted linear regression model to get the predictions for the new data. If the user wishes to use `confidence = TRUE`, this method will also return a 3 column matrix in which the first column is the predictions, the second column is the the lower endpoints of the confidence interval, and the third column will return the upper endpoints of the confidence interval. By default, the confidence level will be 95% but the user can change this by using the `level` argument. 
+    
+2. `blbglm(formula, data, m = 10, B = 5000, parallel = FALSE)`: this second main function utilizes a bag of little bootstrap algorithm to fit a logistic regression model to the data and formula of the user's choice. This main function also gives the option of parallel programming. The default argument, `parallel = FALSE`, will not use parallelization but the user can change this by using `parallel = TRUE` to utilize parallelization. If the user does wish to use the parallelization feature, make sure to run the following code in the console : `plan(multisession, worker = cl)` were cl is the number of CPUs the user wishes to use. This function is from the `furrr` package so the user must also have `furrr` package imported and run `library(furrr)` in there console as well. The arguments `B` and `m` are the number of bootstrap samples and the number of subgroups in which to split the data, respectively. The user can modify these two arguments to any numeric value they desire. 
+
+    * NOTE: The methods for this function, `blbglm()` are the same as above. The only difference is we are fitting and predicted for classification. Instead of using linear regression, this main function and all the methods for this function will use logistic regression. 
+  
+ 
+ \newline   
+ 
+Examples
+---
+
+### MTCARS DATASET
+
+The mtcars data is a built dataset for R that is very popular for linear regression models. We will use this dataset for our two examples on our `blblm()` function using and not using parallel programming. We will be using two features, `wt` and `hp`, to predict our Y, `mpg`.
+
+#### An `blblm()` Example Not Using Parallelization 
+```{r, warning = FALSE}
+# blblm() computes linear regression with bag of little bootstraps
+model1 <- blblm(mpg ~ wt * hp, data = mtcars, m = 3, B = 100, parallel = FALSE)
+print(model1)
+```
+
+```{r, warning = FALSE}
+coef(model1)
+```
+
+
+```{r, warning = FALSE}
+confint(model1, "wt")
+confint(model1, c("wt", "hp"))
+```
+
+```{r, warning = FALSE}
+sigma(model1, confidence = TRUE, level = .95)
+sigma(model1, confidence = FALSE, level = .95)
+```
+
+```{r, warning = FALSE}
+predict(model1, data.frame(wt = c(2.5, 3), hp = c(150, 170)), confidence = TRUE)
+```
+#### An `blblm()` Example Using Parallelization
+
+Before using our parallel programming feature, we must call the furrr package, specify the number of CPUs, and run `plan(multisession, worker = cl)` like in the code below.. In the code below, I used 4 CPUs. 
+```{r, warning = FALSE}
+library(furrr)
+cl = 4
+plan(multisession, worker = cl)
+```
+
+```{r, warning = FALSE}
+model2 <- blblm(mpg ~ wt * hp, data = mtcars, m = 3, B = 100, parallel = TRUE)
+print(model2)
+```
+
+
+```{r, warning = FALSE}
+confint(model2, c("wt", "hp"))
+```
+
+```{r, warning = FALSE}
+sigma(model2, confidence = TRUE, level = .90)
+sigma(model2, confidence = FALSE, level = .90)
+```
+
+```{r, warning = FALSE}
+predict(model2, data.frame(wt = c(2.5, 3), hp = c(150, 170)), confidence = FALSE)
+```
+
+### IRIS DATASET
+
+The iris data is a built dataset for R that is very popular for classification models. We will use this dataset for our two examples on our `blbglm()` function using and not using parallel programming. We will be using two features, `Sepal.Length` and `Sepal.Width`, to predict our Y, `Species`.
+
+```{r, warning = FALSE}
+data("iris")
+head(iris)
+training = iris[1:100,]
+testing = iris[100:150,]
+```
+
+#### A `blbglm()` Example without Parallelization
+
+```{r, warning = FALSE}
+fit_log1 <- blbglm(Species ~ Sepal.Length + Sepal.Width, data = training, B = 100, parallel = FALSE)
+fit_log1
+```
+
+```{r, warning = FALSE}
+coef(fit_log1)
+```
+
+```{r, warning = FALSE}
+confint(fit_log1, c("Sepal.Length", "Sepal.Width"))
+```
+
+```{r, warning = FALSE}
+predict(fit_log1, data.frame(Sepal.Length = c(5.1, 3.0), Sepal.Width = c(3.5, 4.0)), confidence = TRUE)
+```
+#### A `blbglm()` Example with Parallelization
+
+
+Again before using our parallel programming feature, we must call the furrr package, specify the number of CPUs, and run `plan(multisession, worker = cl)` like in the code below.. In the code below, I used 4 CPUs. 
+
+```{r, warning = FALSE}
+library(furrr)
+cl = 4
+plan(multisession, worker = cl)
+```
+
+```{r, warning = FALSE}
+fit_log <- blbglm(Species ~ Sepal.Length + Sepal.Width, data = training, B = 100, parallel = TRUE)
+fit_log
+```
+
+```{r, warning = FALSE}
+coef(fit_log)
+```
+
+```{r, warning = FALSE}
+confint(fit_log, c("Sepal.Length", "Sepal.Width"))
+```
+
+```{r, warning = FALSE}
+predict(fit_log, data.frame(Sepal.Length = c(5.1, 3.0), Sepal.Width = c(3.5, 4.0)))
+```
+

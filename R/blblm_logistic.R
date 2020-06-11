@@ -1,11 +1,11 @@
 #' @import purrr
 #' @import stats
 #' @import furrr
-#' @importFrom magrittr %>%
 #' @importFrom utils capture.output
+#' @importFrom magrittr %>%
 #' @aliases NULL
 #' @details
-#' Linear Regression with Little Bag of Bootstraps with the Option to Use Parallel Programming
+#' Logistic Regression with Little Bag of Bootstraps with the Option to Use Parallel Programming
 "_PACKAGE"
 
 
@@ -13,21 +13,19 @@
 # from https://github.com/jennybc/googlesheets/blob/master/R/googlesheets.R
 utils::globalVariables(c("."))
 
-#' blblm function to compute Linear Regression with Little Bag of Bootstraps
+#' Logistic Regression with Little Bag of Bootstraps with the Option to Use Parallel Programming
 #'
 #' This function also has the option to use parallel programming so if you are using parallel programming, need to specify your workers first. For example, plan(multisession, workers = 4).
 #'
 #' @param formula a formula
-#' @param data a dataframe or a character vector
-#' @param m an integer that is the number of subsets in the data
-#' @param B an integer that is the number of bootstraps
-#' @param parallel a logical character
+#' @param data a dataframe
+#' @param m numeric
+#' @param B numeric
+#' @param parallel logical
 #'
-#' @return blblm
-#'
-#' @examples fit <- blblm(mpg ~ wt * hp, data = mtcars, m = 3, B = 100)
 #' @export
-blblm <- function(formula, data, m = 10, B = 5000, parallel = FALSE) {
+#' @return blbglm
+blbglm <- function(formula, data, m = 10, B = 5000, parallel = FALSE) {
   data_list <- split_data(data, m)
   if (parallel == FALSE) {
     map_func = map
@@ -38,9 +36,9 @@ blblm <- function(formula, data, m = 10, B = 5000, parallel = FALSE) {
   }
   estimates <- map_func(
     data_list,
-    ~ lm_each_subsample(formula = formula, data = ., n = nrow(data), B = B))
+    ~ glm_each_subsample(formula = formula, data = ., n = nrow(data), B = B))
   res <- list(estimates = estimates, formula = formula)
-  class(res) <- "blblm"
+  class(res) <- "blbglm"
   invisible(res)
 }
 
@@ -57,61 +55,65 @@ split_data <- function(data, m) {
 }
 
 
-#' Compute the Estimates
+#' Compute the estimates
 #'
 #' @param formula a formula
 #' @param data a dataframe
 #' @param n numeric
 #' @param B numeric
-lm_each_subsample <- function(formula, data, n, B) {
-  replicate(B, lm_each_boot(formula, data, n), simplify = FALSE)
+glm_each_subsample <- function(formula, data, n, B) {
+  replicate(B, glm_each_boot(formula, data, n), simplify = FALSE)
 }
-
 
 #' compute the regression estimates for a blb dataset
 #'
 #' @param formula a formula
 #' @param data a dataframe
 #' @param n an integer
-lm_each_boot <- function(formula, data, n) {
+glm_each_boot <- function(formula, data, n) {
   freqs <- rmultinom(1, n, rep(1, nrow(data)))
-  lm1(formula, data, freqs)
+  glm1(formula, data, freqs, n)
 }
 
 
-#' Fitting Linear Model with A Bag of Little Bootstraps
+#' #' Fitting Linear Model with A Bag of Little Bootstraps
 #' estimate the regression estimates based on given the number of repetitions
 #'
 #' @param formula an object of class "formula"
 #' @param data 	a data frame, list or environment
 #' @param freqs numeric
+#' @param n numeric
+#'
 #' @return an object of class "lm" or for multiple responses of class
-lm1 <- function(formula, data, freqs) {
+glm1 <- function(formula, data, freqs, n) {
   # drop the original closure of formula,
   # otherwise the formula will pick a wront variable from the global scope.
   environment(formula) <- environment()
-  fit <- lm(formula, data, weights = freqs)
-  list(coef = blbcoef(fit), sigma = blbsigma(fit))
+  fit <- suppressWarnings(glm(formula, family = "binomial", data, weights = freqs, maxit = 100))
+  while(!fit$converged) {
+    freqs <- rmultinom(1, n, rep(1,nrow(data)))
+    fit <- suppressWarnings(glm(formula, family = "binomial", data, weights = freqs, maxit = 100))
+  }
+  list(coef = blbglmcoef(fit), sigma = blbglmsigma(fit))
 }
 
 
 #' Extracts Coefficients
 #' compute the coefficients from fit
 #'
-#' @param fit a fitted blblm model
+#' @param fit a fitted blbglm model
 #' @return numeric values
-blbcoef <- function(fit) {
+blbglmcoef <- function(fit) {
   coef(fit)
 }
-
 
 #' Extract Residual Standard Deviation
 #'
 #' compute sigma from fit
 #'
-#' @param fit a fitted blblm model
+#' @param fit a fitted blbglm model
 #' @return a numeric value
-blbsigma <- function(fit) {
+blbglmsigma <- function(fit) {
   p <- fit$rank
   y <- model.extract(fit$model, "response")
   e <- fitted(fit) - y
@@ -122,32 +124,32 @@ blbsigma <- function(fit) {
 
 #' Print Values
 #'
-#' print.blblm prints an argument
+#' print.blbglm prints an argument
 #' @param x an object used to select a method
 #' @param ... further arguments passed to or from other methods
 #'
 #' @return a value
 #' @export
-#' @method print blblm
-print.blblm <- function(x, ...) {
-  cat("blblm model:", capture.output(x$formula))
+#' @method print blbglm
+print.blbglm <- function(x, ...) {
+  cat("blbglm model:", capture.output(x$formula))
   cat("\n")
 }
 
 
 #' Extracts the Value of Sigma
 #'
-#' sigma.blblm extracts the sigma from the model
+#' sigma.blbglm extracts the sigma from the model
 #' @param object an R object
 #'
 #' @param confidence logical
 #' @param level the confidence level
 #' @param ... additional arguments
 #'
-#' @export
 #' @return a number
-#' @method sigma blblm
-sigma.blblm <- function(object, confidence = FALSE, level = 0.95, ...) {
+#' @export
+#' @method sigma blbglm
+sigma.blbglm <- function(object, confidence = FALSE, level = 0.95, ...) {
   est <- object$estimates
   sigma <- mean(map_dbl(est, ~ mean(map_dbl(., "sigma"))))
   if (confidence) {
@@ -163,33 +165,33 @@ sigma.blblm <- function(object, confidence = FALSE, level = 0.95, ...) {
 
 #' Extract Model Coefficients
 #'
-#' coef.blblm is a function which extracts model coefficients
+#' coef.blbglm is a function which extracts model coefficients
 #'
 #' @param object an object for which the extraction of model coefficients is meaningfu
 #' @param ... other arguments
 #'
 #' @return coefficients extracted from the model object
 #' @export
-#' @method coef blblm
-coef.blblm <- function(object, ...) {
+#' @method coef blbglm
+coef.blbglm <- function(object, ...) {
   est <- object$estimates
   map_mean(est, ~ map_cbind(., "coef") %>% rowMeans())
 }
 
 
-#' The Confidence Level for the function blblm
+#' The Confidence Level for the function blbglm
 #'
-#' confint.blblm gets the confidence level for the model
+#' confint.blbglm gets the confidence level for the model
 #'
 #' @param object a fitted model object.
 #' @param parm a specification of which parameters are to be given confidence intervals, either a vector of numbers or a vector of names. If missing, all parameters are considered.
 #' @param level the confidence level required
 #' @param ... a model object for which prediction is desired
 #'
-#' @export
 #' @return A matrix or vector with columns giving lower and upper confidence limits for each parameter.
-#' @method confint blblm
-confint.blblm <- function(object, parm = NULL, level = 0.95, ...) {
+#' @export
+#' @method confint blbglm
+confint.blbglm <- function(object, parm = NULL, level = 0.95, ...) {
   if (is.null(parm)) {
     parm <- attr(terms(object$formula), "term.labels")
   }
@@ -217,19 +219,18 @@ confint.blblm <- function(object, parm = NULL, level = 0.95, ...) {
 #'
 #' @return a vector or matrix or list of your predictions from your model
 #' @export
-#' @method predict blblm
-predict.blblm <- function(object, new_data, confidence = FALSE, level = 0.95, ...) {
+#' @method predict blbglm
+predict.blbglm <- function(object, new_data, confidence = FALSE, level = 0.95, ...) {
   est <- object$estimates
   X <- model.matrix(reformulate(attr(terms(object$formula), "term.labels")), new_data)
   if (confidence) {
-    map_mean(est, ~ map_cbind(., ~ X %*% .$coef) %>%
+    map_mean(est, ~ map_cbind(., ~ (1/(1+exp(-(X %*% .$coef))))) %>%
                apply(1, mean_lwr_upr, level = level) %>%
                t())
   } else {
-    map_mean(est, ~ map_cbind(., ~X %*% .$coef) %>% rowMeans())
+    map_mean(est, ~ map_cbind(., ~ (1/(1+exp(-(X %*% .$coef))))) %>% rowMeans())
   }
 }
-
 
 
 mean_lwr_upr <- function(x, level = 0.95) {

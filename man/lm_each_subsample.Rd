@@ -2,10 +2,19 @@
 % Please edit documentation in R/blblm.R
 \name{lm_each_subsample}
 \alias{lm_each_subsample}
-\title{compute the estimates}
+\title{Compute the Estimates}
 \usage{
 lm_each_subsample(formula, data, n, B)
 }
+\arguments{
+\item{formula}{a formula}
+
+\item{data}{a dataframe}
+
+\item{n}{numeric}
+
+\item{B}{numeric}
+}
 \description{
-compute the estimates
+Compute the Estimates
 }
